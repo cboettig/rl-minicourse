@@ -19,7 +19,7 @@ config.env="one_fish"
 agent = config.build()
 
 run_id = "A"
-iterations = 500
+iterations = 50
 checkpoint = (f"run{run_id}"+"/checkpoint_000{}".format(iterations))
 
 if not os.path.exists(checkpoint): # train only if no trained agent saved
