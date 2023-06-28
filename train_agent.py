@@ -20,7 +20,7 @@ agent = config.build()
 
 run_id = "A"
 iterations = 500
-checkpoint = ("run{run_id}/checkpoint_000{}".format(iterations))
+checkpoint = (f"run{run_id}"+"/checkpoint_000{}".format(iterations))
 
 if not os.path.exists(checkpoint): # train only if no trained agent saved
   for _ in range(iterations):
