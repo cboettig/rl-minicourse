@@ -1,5 +1,22 @@
 # Initialize saved copy of eval environment:
+from envs import one_fish
+#from ray.rllib.algorithms import ppo
+from ray.rllib.algorithms import td3
+from ray.tune import register_env
+import os
+import pandas as pd
+import numpy as np
+import torch
+
+
+config = ppo.PPOConfig()
+config = config.resources(num_gpus=torch.cuda.device_count())
+config.framework_str="torch"
+config.create_env_on_local_worker = True
+config.env="one_fish"
+agent = config.build()
 config = agent.evaluation_config.env_config
+
 config.update({'seed': 42})
 env = agent.env_creator(config)
 
