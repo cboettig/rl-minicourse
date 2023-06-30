@@ -33,9 +33,6 @@ for t in range(env.Tmax):
 cols = ["t","action", "reward", "X"]
 df = pd.DataFrame(df, columns = cols)
 
-## Plots ## 
-## Timeseries
-
 df["state"] = (df.X + 1) * env.bound / 2
 df["effort"] = (df.action + 1) / 2
 df["escapement"] = (df.state - df.effort * df.state)
