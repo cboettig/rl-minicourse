@@ -3,7 +3,7 @@ from stable_baselines3.common.env_checker import check_env
 from envs import one_fish
 import numpy as np
 import pandas as pd
-from plotnine import ggplot, geom_point, aes, geom_line,
+from plotnine import ggplot, geom_point, aes, geom_line
 
 env = one_fish.one_fish()
 check_env(env)

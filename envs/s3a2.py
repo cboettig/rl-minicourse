@@ -5,8 +5,8 @@ import numpy as np
 import gymnasium as gym
 from gymnasium import spaces
 
-class three_fish(gym.Env):
-    """A 3-species ecosystem model"""
+class s3a2(gym.Env):
+    """A 3-species ecosystem model with two control actions"""
     def __init__(self, config=None):
         config = config or {}
         parameters = {
@@ -44,8 +44,8 @@ class three_fish(gym.Env):
         self.bound = 2 * self.parameters["K_x"]
         
         self.action_space = spaces.Box(
-            np.array([0], dtype=np.float32),
-            np.array([1], dtype=np.float32),
+            np.array([-1, -1], dtype=np.float32),
+            np.array([1, 1], dtype=np.float32),
             dtype = np.float32
         )
         self.observation_space = spaces.Box(
@@ -64,7 +64,7 @@ class three_fish(gym.Env):
         return self.state, info
 
     def step(self, action):
-        action = np.clip(action, [0], [1])
+        action = np.clip(action, self.action_space.low, self.action_space.high)
         pop = self.population() # current state in natural units
         
         # harvest and recruitment

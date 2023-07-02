@@ -8,24 +8,24 @@ import torch
 
 register_env("one_fish",one_fish.one_fish)
 
-#config = td3.TD3Config()
+config = td3.TD3Config()
 
-config = ppo.PPOConfig()
+#config = ppo.PPOConfig()
 config = config.resources(num_gpus=torch.cuda.device_count())
 config.framework_str="torch"
 config.create_env_on_local_worker = True
 config.env="one_fish"
 agent = config.build()
 
-run_id = "PPO"
-iterations = 200
-checkpoint = (f"run{run_id}"+"/checkpoint_000{}".format(iterations))
+run_id = "TD3"
+iterations = 60
+checkpoint = (f"run_{run_id}"+"/checkpoint_000{}".format(iterations))
 
 if not os.path.exists(checkpoint): # train only if no trained agent saved
   for _ in range(iterations):
     print(f"iteration {_}", end = "\r")
     agent.train()
-  checkpoint = agent.save("run{run_id}")
+  checkpoint = agent.save(f"run_{run_id}")
 
 agent.restore(checkpoint)
 

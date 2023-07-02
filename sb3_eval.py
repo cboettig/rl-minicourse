@@ -13,7 +13,7 @@ df = []
 episode_reward = 0
 observation, _ = env.reset()
 for t in range(env.Tmax):
-  action, _ = agent.predict(observation)
+  action, _ = agent.predict(observation, deterministic=True)
   df.append([t, action[0], episode_reward, observation[0]])
   observation, reward, terminated, done, info = env.step(action)
   episode_reward += reward
