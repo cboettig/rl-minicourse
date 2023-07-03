@@ -11,7 +11,7 @@ class one_fish(gym.Env):
         parameters = {
          "r": np.float32(0.1),
          "K": np.float32(1.0),
-         "sigma": np.float32(0.1),
+         "sigma": np.float32(0.01),
          "cost": np.float32(0.0)
         }
         initial_pop = np.array([0.8],
@@ -26,7 +26,7 @@ class one_fish(gym.Env):
         self.bound = 2 * self.parameters["K"]
         
         self.action_space = spaces.Box(
-            np.array([0], dtype=np.float32),
+            np.array([-1], dtype=np.float32),
             np.array([1], dtype=np.float32),
             dtype = np.float32
         )
@@ -37,7 +37,6 @@ class one_fish(gym.Env):
         )        
         self.reset(seed=config.get("seed", None))
 
-
     def reset(self, *, seed=None, options=None):
         self.timestep = 0
         self.state = self.update_state(self.initial_pop)
@@ -46,11 +45,11 @@ class one_fish(gym.Env):
         return self.state, info
 
     def step(self, action):
-        action = np.clip(action, [0], [1])
+        action = np.clip(action, self.action_space.low, self.action_space.high)
         pop = self.population() # current state in natural units
-        
+        effort = (action + 1.) / 2
         # harvest and recruitment
-        pop, reward = self.harvest(pop, action)
+        pop, reward = self.harvest(pop, effort)
         pop = self.population_growth(pop)
         
         self.timestep += 1
@@ -61,19 +60,17 @@ class one_fish(gym.Env):
         return observation, reward, terminated, False, {}
 
     
-    def harvest(self, pop, action): 
-        harvest = action * pop[0]
-        pop[0] = pop[0] - harvest[0]
+    def harvest(self, pop, effort): 
+        harvest = effort[0] * pop[0]
+        pop[0] = pop[0] - harvest
         
-        reward = np.max(harvest[0],0) - self.parameters["cost"] * action
-        return pop, np.float32(reward[0])
+        reward = np.max(harvest,0) - self.parameters["cost"] * effort[0]
+        return pop, np.float64(reward)
       
     def population_growth(self, pop):
         X = pop[0]
         p = self.parameters
-
         X += p["r"] * X * (1 - X / p["K"]) + p["sigma"] * X * np.random.normal()
-
         pop = np.array([X], dtype=np.float32)
         return(pop)
 

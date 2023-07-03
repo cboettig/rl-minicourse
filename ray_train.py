@@ -1,32 +1,31 @@
 from envs import one_fish
-from ray.rllib.algorithms import ppo
+from ray.rllib.algorithms import ppo, td3
 from ray.tune import register_env
 import os
 import pandas as pd
 import numpy as np
 import torch
 
-
 register_env("one_fish",one_fish.one_fish)
 
-## We could call env directly without this if only  our envs took a env_config dict argument
+config = td3.TD3Config()
 
-config = ppo.PPOConfig()
-#config = config.resources(num_gpus=torch.cuda.device_count())
+#config = ppo.PPOConfig()
+config = config.resources(num_gpus=torch.cuda.device_count())
 config.framework_str="torch"
 config.create_env_on_local_worker = True
 config.env="one_fish"
 agent = config.build()
 
-run_id = "A"
-iterations = 50
-checkpoint = (f"run{run_id}"+"/checkpoint_000{}".format(iterations))
+run_id = "TD3"
+iterations = 60
+checkpoint = (f"run_{run_id}"+"/checkpoint_000{}".format(iterations))
 
 if not os.path.exists(checkpoint): # train only if no trained agent saved
   for _ in range(iterations):
     print(f"iteration {_}", end = "\r")
     agent.train()
-  checkpoint = agent.save("run{run_id}")
+  checkpoint = agent.save(f"run_{run_id}")
 
 agent.restore(checkpoint)
 
