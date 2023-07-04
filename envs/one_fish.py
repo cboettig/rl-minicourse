@@ -53,10 +53,12 @@ class one_fish(gym.Env):
         pop = self.population_growth(pop)
         
         self.timestep += 1
-        terminated = bool(self.timestep > self.Tmax)
-
         self.state = self.update_state(pop) # transform into [-1, 1] space
         observation = self.observation() # for now, same as self.state
+        
+        done = bool(self.timestep > self.Tmax)
+        terminated = bool(self.state <= -1.0)
+
         return observation, reward, terminated, False, {}
 
     
