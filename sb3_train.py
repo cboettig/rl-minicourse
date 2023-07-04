@@ -1,5 +1,6 @@
 import os
-from sb3_contrib import TQC, PPO, A2C
+from sb3_contrib import TQC
+from stable_baselines3 import PPO, A2C
 from stable_baselines3.common.env_util import make_vec_env
 from envs import one_fish
 env = one_fish.one_fish

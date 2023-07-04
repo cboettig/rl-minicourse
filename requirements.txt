@@ -12,3 +12,5 @@ tensorboard==2.12.3
 tensorboard-data-server==0.7.1
 tensorboardX==2.6.1
 torch==2.0.1
+rich==13.4.2
+tqdm==4.65.0

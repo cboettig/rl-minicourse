@@ -27,6 +27,7 @@ for t in range(100):
     break
 
 
+
 cols = ["t","action", "reward", "state"]
 df = pd.DataFrame(df, columns = cols)
 
