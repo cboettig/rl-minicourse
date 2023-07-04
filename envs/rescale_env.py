@@ -8,6 +8,7 @@ import gymnasium as gym
 class rescale_env(gym.Env):
     def __init__(self, env):
       self.rl_env = env
+      self.Tmax = env.Tmax
     def reset(self, *, seed=None, options=None):
       state, info = self.rl_env.reset()
       return self.rl_env.population(), info

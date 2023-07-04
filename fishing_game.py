@@ -3,12 +3,13 @@ from stable_baselines3.common.env_checker import check_env
 import pandas as pd
 import numpy as np
 from plotnine import ggplot, aes, geom_line
-from envs import one_fish, rescale_env
+from envs.one_fish import one_fish
+from envs.rescale_env import rescale_env
 
 # RL envs work in transformed units
 # rescale_wrapper lets us humans play in natural units
-rl_env = one_fish.one_fish()
-env = rescale_env.rescale_env(rl_env)
+rl_env = one_fish()
+env = rescale_env(rl_env)
 
 df = []
 episode_reward = 0
