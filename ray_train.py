@@ -30,7 +30,7 @@ if not os.path.exists(checkpoint): # train only if no trained agent saved
 agent.restore(checkpoint)
 
 stats = agent.evaluate() # built-in method to evaluate agent on eval env
-stats['evaluation']['episode_reward_mean']
-stats['evaluation']['episode_reward_max']
-stats['evaluation']['episode_reward_min']
-stats['evaluation']['episode_len_mean']
+print({"mean": stats['evaluation']['episode_reward_mean'],
+       "max": stats['evaluation']['episode_reward_max'],
+       "min": stats['evaluation']['episode_reward_min'],
+       "mean_len": stats['evaluation']['episode_len_mean']})
