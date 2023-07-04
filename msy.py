@@ -17,6 +17,7 @@ def simulate(env, action):
     episode_reward = 0
     observation, _ = env.reset()
     for t in range(env.Tmax):
+      # NOTE we use the same action across all t...
       df.append(np.append([t, rep, action, episode_reward], observation))
       observation, reward, terminated, done, info = env.step(action)
       episode_reward += reward
@@ -36,3 +37,6 @@ df2 = pl.DataFrame(np.vstack(df), schema=cols)
 max_reward = df2.max().select("reward")
 df2.filter(pl.col("reward") == max_reward)
 
+
+# Surplus production MSY is r*K/4, achieved by F*B_MSY,  (r/2) * (K/2)
+rl_env.parameters["r"] / 2
