@@ -18,6 +18,7 @@ K = 100
 def dynamic(x, action):
     y = x * (1 - action)
     x_t1 = x + y * r * (1 - y / K)
+
     if(x_t1 < 0): 
       x_t1 = 0
     return(x_t1)
@@ -41,7 +42,7 @@ for k in states:
     utility[k,i] = get_utility(nextpop, actions[i])
 
 # Discount factor
-discount = 0.99
+discount = 0.9
 
 
 # let's write our own value iteration

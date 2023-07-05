@@ -66,9 +66,10 @@ class s3a2(gym.Env):
     def step(self, action):
         action = np.clip(action, self.action_space.low, self.action_space.high)
         pop = self.population() # current state in natural units
-        
+        effort = (action + 1.) / 2
+
         # harvest and recruitment
-        pop, reward = self.harvest(pop, action)
+        pop, reward = self.harvest(pop, effort)
         pop = self.population_growth(pop)
         
         self.timestep += 1
