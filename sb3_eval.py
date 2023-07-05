@@ -1,7 +1,7 @@
 import gymnasium as gym
 import numpy as np
 from stable_baselines3 import PPO, A2C
-from sb3_contrib import TQC
+from sb3_contrib import TQC, ARS
 from stable_baselines3.common.env_checker import check_env
 import pandas as pd
 from plotnine import ggplot, aes, geom_line
@@ -9,7 +9,7 @@ from envs.one_fish import one_fish
 from envs.three_fish import three_fish
 from envs.s3a2 import s3a2
 
-agent = PPO.load("ppo_fish")
+agent = ARS.load("ars_fish")
 #agent = TQC.load("tqc_s3a2")
 env = one_fish()
 

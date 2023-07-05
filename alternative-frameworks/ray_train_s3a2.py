@@ -1,12 +1,14 @@
-from envs import one_fish
 from ray.rllib.algorithms import ppo, td3, sac
 from ray.tune import register_env
 import os
 import pandas as pd
 import numpy as np
 import torch
+from envs.one_fish import one_fish
+from envs.three_fish import three_fish
+from envs.s3a2 import s3a2
 
-register_env("s3a2",one_fish.one_fish)
+register_env("s3a2",s3a2)
 
 #config = sac.SACConfig()
 
