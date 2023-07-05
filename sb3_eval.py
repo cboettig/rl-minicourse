@@ -28,6 +28,8 @@ for t in range(env.Tmax):
   if terminated:
     break
 
+episode_reward
+
 #cols = ["t","reward", "action",  "X", "Y", "Z"]
 cols = ["t","reward", "action",  "X"]
 df = pd.DataFrame(df, columns = cols)
@@ -36,7 +38,3 @@ df["escapement"] = (df.X - df.action * df.X)
 ggplot(df, aes("t", "escapement")) + geom_line()
 ggplot(df, aes("t", "action")) + geom_line()
 ggplot(df, aes("t", "reward")) + geom_line()
-
-
-episode_reward
-

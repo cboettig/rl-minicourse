@@ -56,10 +56,11 @@ class one_fish(gym.Env):
         self.state = self.update_state(pop) # transform into [-1, 1] space
         observation = self.observation() # for now, same as self.state
         
-        done = bool(self.timestep > self.Tmax)
-        terminated = bool(self.state <= -1.0)
+        terminated = bool(self.timestep >= self.Tmax)
+        truncated = bool(self.state <= -1.0)
+        info = {}
 
-        return observation, reward, terminated, False, {}
+        return observation, reward, terminated, truncated, info
 
     
     def harvest(self, pop, effort): 
