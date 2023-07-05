@@ -97,7 +97,7 @@ class s3a2(gym.Env):
         p = self.parameters
         
         coupling = p["v0"]**2 #+ 0.02 * np.sin(2 * np.pi * self.timestep / 60)
-        K_x = p["K_x"] # + 0.01 * np.sin(2 * np.pi * self.timestep / 30)
+        K_x = p["K_x"] + 0.01 * np.sin(2 * np.pi * self.timestep / 30)
 
         X += (p["r_x"] * X * (1 - X / K_x)
               - p["beta"] * Z * (X**2) / (coupling + X**2)
