@@ -1,5 +1,6 @@
 import gymnasium as gym
-from stable_baselines3 import PPO, A2C, TQC
+from stable_baselines3 import PPO, A2C
+from sb3_contrib import TQC
 from stable_baselines3.common.env_checker import check_env
 import pandas as pd
 from plotnine import ggplot, aes, geom_line
