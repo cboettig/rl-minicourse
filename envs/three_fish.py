@@ -44,7 +44,7 @@ class three_fish(gym.Env):
         self.bound = 2 * self.parameters["K_x"]
         
         self.action_space = spaces.Box(
-            np.array([0], dtype=np.float32),
+            np.array([-1], dtype=np.float32),
             np.array([1], dtype=np.float32),
             dtype = np.float32
         )
@@ -64,11 +64,12 @@ class three_fish(gym.Env):
         return self.state, info
 
     def step(self, action):
-        action = np.clip(action, [0], [1])
+        action = np.clip(action, self.action_space.low, self.action_space.high)
         pop = self.population() # current state in natural units
-        
+        effort = (action + 1.) / 2
+
         # harvest and recruitment
-        pop, reward = self.harvest(pop, action)
+        pop, reward = self.harvest(pop, effort)
         pop = self.population_growth(pop)
         
         self.timestep += 1
