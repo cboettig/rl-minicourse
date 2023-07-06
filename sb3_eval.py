@@ -1,16 +1,11 @@
-import gymnasium as gym
 import numpy as np
 from stable_baselines3 import PPO, A2C
 from sb3_contrib import TQC, ARS
-from stable_baselines3.common.env_checker import check_env
-import pandas as pd
-from plotnine import ggplot, aes, geom_line
 from envs.one_fish import one_fish
 from envs.three_fish import three_fish
 from envs.s3a2 import s3a2
 
 agent = ARS.load("ars_fish")
-#agent = TQC.load("tqc_s3a2")
 env = one_fish()
 
 df = []
@@ -30,11 +25,14 @@ for t in range(env.Tmax):
 
 episode_reward
 
-#cols = ["t","reward", "action",  "X", "Y", "Z"]
-cols = ["t","reward", "action",  "X"]
-df = pd.DataFrame(df, columns = cols)
 
-df["escapement"] = (df.X - df.action * df.X)
-ggplot(df, aes("t", "escapement")) + geom_line()
-ggplot(df, aes("t", "action")) + geom_line()
-ggplot(df, aes("t", "reward")) + geom_line()
+# optional plotting code
+import polars as pl
+from plotnine import ggplot, aes, geom_line
+cols = ["t", "action", "reward", "state"]
+
+dfl = (pl.DataFrame(df, schema=cols).
+        select(["t", "action", "state"]).
+        melt("t")
+      )
+ggplot(dfl, aes("t", "value", color="variable")) + geom_line()
