@@ -31,10 +31,14 @@ df = ray.get(parallel)
 
 # convert to polars
 cols = ["rep", "t", "reward", "action", "X"]
-df2 = pl.DataFrame(np.vstack(df), schema=cols)
-max_reward = df2.max().select("reward")
-F_msy = df2.filter(pl.col("reward") == max_reward)
+data = pl.DataFrame(np.vstack(df), schema=cols)
+aves = (data
+ .groupby(pl.col("t", "action"))
+ .agg(pl.col("reward").mean())
+)
 
+max_reward = aves.max().select("reward")
+F_msy = aves.filter(pl.col("reward") == max_reward)
 print(F_msy)
 
 # Surplus production MSY is r*K/4, achieved by F*B_MSY,  (r/2) * (K/2)
