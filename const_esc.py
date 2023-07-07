@@ -28,9 +28,13 @@ for t in range(env.Tmax):
 # optional plotting code
 import polars as pl
 from plotnine import ggplot, aes, geom_line
+
 cols = ["t", "reward", "action", "state"]
-df2 = pl.DataFrame(df, schema=cols)
-df2.with_columns(escapement = pl.col("state") - pl.col("action") * pl.col("state"))
-dfl = df2.melt("t")
+dfl = (pl.DataFrame(df, schema=cols)
+       .with_columns(escapement = pl.col("state") - pl.col("action") * pl.col("state"))
+       .select(["t", "action", "state", "escapement"])
+       .melt("t")
+)
+
 ggplot(dfl, aes("t", "value", color="variable")) + geom_line()
 
