@@ -25,7 +25,7 @@ for t in range(10):
               ", profits: " + format(episode_reward, '.2f'))
     txt = input(status + ". Set harvest effort [0,1]:  ")
     action = np.float32(txt)
-    df.append([t, action, episode_reward, observation[0]])
+    df.append([t, episode_reward, action, observation[0]])
     observation, reward, terminated, truncated, info = env.step(action)
     episode_reward += reward
     if terminated or truncated:
@@ -37,7 +37,7 @@ print("Final score: " + format(episode_reward, '.4f'))
 # optional plotting code
 import polars as pl
 from plotnine import ggplot, aes, geom_line
-cols = ["t", "action", "reward", "state"]
+cols = ["t", "reward", "action", "state"]
 
 dfl = (pl.DataFrame(df, schema=cols).
         select(["t", "action", "state"]).

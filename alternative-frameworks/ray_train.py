@@ -1,10 +1,8 @@
+import os
 from envs import one_fish
 from ray.rllib.algorithms import ppo, td3
 from ray.tune import register_env
-import os
-import pandas as pd
 import numpy as np
-import torch
 
 register_env("one_fish",one_fish.one_fish)
 
@@ -19,7 +17,7 @@ agent = config.build()
 
 run_id = "TD3"
 iterations = 60
-checkpoint = (f"run_{run_id}"+"/checkpoint_000{}".format(iterations))
+checkpoint = (f"run_{run_id}"+"/checkpoint_" + str(iterations).zfill(6))
 
 if not os.path.exists(checkpoint): # train only if no trained agent saved
   for _ in range(iterations):

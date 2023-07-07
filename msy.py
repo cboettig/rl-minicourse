@@ -16,10 +16,10 @@ def simulate(env, action):
     observation, _ = env.reset()
     for t in range(env.Tmax):
       # NOTE we use the same action across all t...
-      df.append(np.append([t, rep, action, episode_reward], observation))
-      observation, reward, terminated, done, info = env.step(action)
+      df.append(np.append([rep, t, episode_reward, action], observation))
+      observation, reward, terminated, done, _ = env.step(action)
       episode_reward += reward
-      if terminated:
+      if terminated or done:
         break
   return(df)
 
@@ -30,11 +30,12 @@ parallel = [simulate.remote(env, i) for i in actions]
 df = ray.get(parallel)
 
 # convert to polars
-cols = ["t", "rep", "action", "reward", "X"]
+cols = ["rep", "t", "reward", "action", "X"]
 df2 = pl.DataFrame(np.vstack(df), schema=cols)
 max_reward = df2.max().select("reward")
-df2.filter(pl.col("reward") == max_reward)
+F_msy = df2.filter(pl.col("reward") == max_reward)
 
+print(F_msy)
 
 # Surplus production MSY is r*K/4, achieved by F*B_MSY,  (r/2) * (K/2)
 rl_env.parameters["r"] / 2

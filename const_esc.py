@@ -1,42 +1,36 @@
-import gymnasium as gym
-from stable_baselines3.common.env_checker import check_env
-from envs import one_fish
+from envs.one_fish import one_fish
+from envs.rescale_env import rescale_env
 import numpy as np
-import pandas as pd
-from plotnine import ggplot, geom_point, aes, geom_line
 
-env = one_fish.one_fish()
-check_env(env)
+# RL envs work in transformed units
+rl_env = one_fish()
+env = rescale_env(rl_env)
 
-def const_esc(obs, esc=0.5, bound=2):
-  state = (obs+1) * bound / 2
-  harvest = np.max([state[0] - esc, 0])
-  effort = harvest / state[0]
-  action = np.array([effort * 2 -1])
-  return(action)
+def const_esc(obs, esc=0.5):
+  harvest = np.max([obs[0] - esc, 0])
+  effort = harvest / obs
+  return(effort)
 
+# consider an alternative initial state
+env.rl_env.initial_pop = np.array([0.1], dtype=np.float32)
 df = []
 episode_reward = 0
 observation, _ = env.reset()
 
 for t in range(env.Tmax):
-  #effort = env.parameters["r"]/2
-  #action = np.array([effort * 2 -1])
   action = const_esc(observation)
-  df.append([t, action[0], episode_reward, observation[0]])
+  df.append([t, episode_reward, action[0], observation[0]])
   observation, reward, terminated, done, info = env.step(action)
   episode_reward += reward
   if terminated:
     break
 
-
-cols = ["t","action", "reward", "X"]
-df = pd.DataFrame(df, columns = cols)
-
-df["state"] = (df.X + 1) * env.bound / 2
-df["effort"] = (df.action + 1) / 2
-df["escapement"] = (df.state - df.effort * df.state)
-ggplot(df, aes("t", "escapement")) + geom_line()
-ggplot(df, aes("t", "state")) + geom_line()
-episode_reward
+# optional plotting code
+import polars as pl
+from plotnine import ggplot, aes, geom_line
+cols = ["t", "reward", "action", "state"]
+df2 = pl.DataFrame(df, schema=cols)
+df2.with_columns(escapement = pl.col("state") - pl.col("action") * pl.col("state"))
+dfl = df2.melt("t")
+ggplot(dfl, aes("t", "value", color="variable")) + geom_line()
 
