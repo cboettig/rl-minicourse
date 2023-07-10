@@ -1,6 +1,8 @@
 
 [timetable](https://ws.amsi.org.au/timetable/)
 
+(May or may not resemble our actual syllabus)
+
 # Tues AM: Session 1
 
 - Introduction: RL & Conservation Decision-making
