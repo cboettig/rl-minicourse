@@ -2,9 +2,9 @@ import os
 from sb3_contrib import TQC, ARS
 from stable_baselines3 import PPO, A2C
 from stable_baselines3.common.env_util import make_vec_env
-from envs import one_fish
+from envs.one_fish import one_fish
 
-env = one_fish.one_fish
+env = one_fish
 vec_env = make_vec_env(env, n_envs=4)
 log = os.path.expanduser("~/ray_results/sb3/")
 
