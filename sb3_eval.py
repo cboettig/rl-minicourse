@@ -9,15 +9,14 @@ env = one_fish()
 df = []
 episode_reward = 0
 observation, _ = env.reset()
+
 for t in range(env.Tmax):
   action, _ = agent.predict(observation, deterministic=True)
-  
-  obs = (observation + 1 ) / 2 # natural units
-  effort = (action[0] + 1)/2
-  df.append(np.append([t, episode_reward, effort], obs))
-  
   observation, reward, terminated, done, info = env.step(action)
-  episode_reward += reward
+  episode_reward += reward  
+  obs = (observation + 1 ) / 2 # natural units
+  effort = (action + 1)/2      # natural units
+  df.append([t, episode_reward, *effort, *obs])
   if terminated or done:
     break
 
