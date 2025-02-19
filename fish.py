@@ -119,7 +119,7 @@ class fish(gym.Env):
                        np.repeat(0, pop.__len__()),
                        np.repeat(np.Inf, pop.__len__()))
         
-    def time_step(self, effort):
+    def time_step(self, effort = 0):
         action = effort * 2 - 1
         observation, reward, terminated, done, info = self.step(action)
         obs = self.population_units(observation)

@@ -30,16 +30,17 @@ def simulate(agent, env, timeseries = True):
 
 import polars as pl
 from plotnine import ggplot, aes, geom_line
-cols = ["t", "reward",  "effort", "X"]
 
-def plot_sim(df):
-    dfl = (pl.DataFrame(df, schema=cols).
-            select(["t", "effort", "X"]).
+
+def plot_sim(df, 
+             scnema = ["t", "reward",  "effort", "X"],
+             variables = ["t", "effort", "X"]
+                 ):
+    dfl = (pl.DataFrame(df, schema=scnema).
+            select(variables).
             melt("t")
           )
     return ggplot(dfl, aes("t", "value", color="variable")) + geom_line()
-
-plot_sim(df)
 
 
 
