@@ -1,7 +1,7 @@
 
 import numpy as np
 def utility(pop, effort):
-    q0 = 0.1 # catchability / restoration coefficients
+    q0 = .9 # catchability
 
     benefits = effort[0] * pop[0] * q0
     # small cost to any harvesting
@@ -88,7 +88,7 @@ class fish(gym.Env):
     def step(self, action):
         action = np.clip(action, self.action_space.low, self.action_space.high)
         pop = self.population_units(self.state) # current state in natural units
-        effort = (action + 1.) / 2
+        effort = self.effort_units(action)
 
         # harvest and recruitment
         reward = self.utility(pop, effort)
@@ -118,9 +118,15 @@ class fish(gym.Env):
         return np.clip(pop, 
                        np.repeat(0, pop.__len__()),
                        np.repeat(np.Inf, pop.__len__()))
+
+    def action_units(self, effort): 
+        return np.array(effort, dtype=np.float32) * 2 - 1.
+        
+    def effort_units(self, action): 
+        return (np.array(action, dtype=np.float32) + 1.) / 2
         
     def time_step(self, effort = 0):
-        action = effort * 2 - 1
+        action = self.action_units(effort)
         observation, reward, terminated, done, info = self.step(action)
         obs = self.population_units(observation)
         return obs, reward, terminated
