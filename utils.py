@@ -1,26 +1,36 @@
 import numpy as np
 
-# A simple agent
-class fixed_action:
-    def __init__(self, effort):
-        self.effort = np.array(effort, dtype=np.float32)
-
-    def predict(self, observation, **kwargs):
-        action = self.effort * 2 - 1
-        return action, {}
-
-
 def simulate(agent, env, timeseries = True):
+    # initial conditions
+    df = []
+    episode_reward = 0
+    obs, _ = env.reset()
+    
+    for t in range(env.Tmax):
+      action = agent.predict(obs, deterministic=True)
+      obs, reward, done = env.time_step(action)
+      episode_reward += reward
+      if timeseries:
+          df.append([t, episode_reward, action, obs])
+      if done:
+        break
+    return df, episode_reward
+
+
+# When agent.predict uses RL's -1, 1
+def simulate_rl(agent, env, timeseries = True):
     df = []
     episode_reward = 0
     observation, _ = env.reset()
     for t in range(env.Tmax):
-      obs = env.population_units(observation) # natural units
-      action, _ = agent.predict(obs, deterministic=True)
-      if timeseries:
-          df.append([t, episode_reward, *action, *obs])
+      action, _ = agent.predict(observation, deterministic=True)
       observation, reward, terminated, done, info = env.step(action)
       episode_reward += reward
+
+      if timeseries:
+          effort = env.effort_units(action)
+          obs = env.population_units(observation) # natural units
+          df.append([t, episode_reward, *effort, *obs])
       if terminated or done:
         break
     

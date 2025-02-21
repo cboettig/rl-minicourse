@@ -21,7 +21,7 @@ initial_pop = [0.5]
 
 
 parameters = {
-"r_x": np.float32(0.13),
+"r_x": np.float32(0.02),
 "K": np.float32(1),
 "sigma_x": np.float32(0.05),
 }
@@ -35,8 +35,9 @@ def dynamics(pop, effort, harvest_fn, p, timestep=1):
     
     ## env fluctuations
     K = p["K"] # - 0.2 * np.sin(2 * np.pi * timestep / 3200)
-
-    X += (p["r_x"] * X * (1 - X / K)
+    r = p["r_x"] + 0.1 * np.sin(2 * np.pi * timestep / 3200)
+    
+    X += (r * X * (1 - X / K)
             + p["sigma_x"] * X * np.random.normal()
             )
     
