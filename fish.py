@@ -1,7 +1,7 @@
 
 import numpy as np
-def utility(pop, effort):
-    q0 = .9 # catchability
+def utility(pop, effort, p):
+    q0 = p["q_0"] # catchability
 
     benefits = effort[0] * pop[0] * q0
     # small cost to any harvesting
@@ -12,8 +12,8 @@ def utility(pop, effort):
         benefits -= 10
     return benefits - costs
 
-def harvest(pop, effort):
-    q0 = 0.1 # catchability / restoration coefficients
+def harvest(pop, effort, p):
+    q0 = p["q_0"] # catchability / restoration coefficients
     pop[0] = pop[0] * (1 - effort[0] * q0) # pop 0, salmon
     return pop
 
@@ -23,14 +23,15 @@ initial_pop = [0.5]
 parameters = {
 "r_x": np.float32(0.03),
 "K": np.float32(1),
-"sigma_x": np.float32(0.1),
+"sigma_x": np.float32(0.03),
+"q_0": 0.9,
 }
 
 # pop = elk, caribou, wolves
 # Caribou Scenario
 def dynamics(pop, effort, harvest_fn, p, timestep=1):
 
-    pop = harvest_fn(pop, effort)        
+    pop = harvest_fn(pop, effort, p)        
     X = pop[0]
     
     ## env fluctuations
@@ -92,7 +93,7 @@ class fish(gym.Env):
         effort = self.effort_units(action)
 
         # harvest and recruitment
-        reward = self.utility(pop, effort)
+        reward = self.utility(pop, effort, self.parameters)
         nextpop = self.dynamics(pop, effort, self.harvest, self.parameters, self.timestep)
         
         self.timestep += 1
