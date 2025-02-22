@@ -3,7 +3,7 @@ import numpy as np
 def utility(pop, effort, p):
     q0 = p["q_0"] # catchability
 
-    benefits = effort[0] * pop[0] * q0
+    benefits = effort[0] * pop[0] * q0 * p["price"]
     # small cost to any harvesting
     costs = .00001 * sum(effort) # cost to culling
 
@@ -23,8 +23,9 @@ initial_pop = [0.5]
 parameters = {
 "r_x": np.float32(0.03),
 "K": np.float32(1),
-"sigma_x": np.float32(0.03),
-"q_0": 0.9,
+"sigma_x": np.float32(0.1),
+"q_0": 0.1,
+"price": 9,
 }
 
 # pop = elk, caribou, wolves
