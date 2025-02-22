@@ -23,7 +23,7 @@ initial_pop = [0.5]
 parameters = {
 "r_x": np.float32(0.03),
 "K": np.float32(1),
-"sigma_x": np.float32(0.1),
+"sigma_x": np.float32(0.05),
 "q_0": 0.1,
 "price": 9,
 }
